@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Geist, Geist_Mono, Roboto_Slab } from "next/font/google";
 import "./globals.css";
 
@@ -32,10 +33,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <header className="links">
           <nav>
-            <a href="">Home</a>
-            <a href="">About</a>
-            <a href="">Projects</a>
-            <a href="">Contacts</a>
+            <Link href="/">Home</Link>
+            <Link href="">About</Link>
+            <Link href="/projects">Projects</Link>
+            <Link href="">Contacts</Link>
           </nav>
         </header>
         {children}
