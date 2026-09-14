@@ -21,7 +21,7 @@ export function ProjectSearch({ projects }: Props) {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search projects"
-        className="mt-8 w-80 border-2 px-4 py-2 border-blue-950 rounded-xl text-blue-950 placeholder:text-blue-900/55 focus:border-blue-900"
+        className="mt-8 w-80 border-2 px-4 py-2 border-blue-950 rounded-xl text-blue-950 placeholder:text-blue-900/55 focus:outline-none focus:border-blue-900 caret-blue-950"
       />
 
       <ProjectList projects={shown} />
