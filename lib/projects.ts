@@ -5,6 +5,13 @@ export type Project = {
   year: number;
   summary: string;
 };
+
+export type Stats = {
+  total: number;
+  newest: number;
+  oldest: number;
+};
+
 const PROJECTS: Project[] = [
   {
     slug: "vivid-stasis-character-wiki",
@@ -34,6 +41,25 @@ const PROJECTS: Project[] = [
       "An application for a restaurant. Lists down all orders, supplies, and statistics. However, it was left unfinished due to time constraints.",
   },
 ];
-export const getProjects = async () => PROJECTS;
-export const getProject = async (slug: string) =>
-  PROJECTS.find((p) => p.slug === slug);
+
+export async function readProjects() {
+  return PROJECTS;
+}
+
+export async function readProject(slug: string) {
+  return PROJECTS.find((p) => p.slug === slug) ?? null;
+}
+
+export async function readStats(): Promise<{
+  total: number;
+  newest: number;
+  oldest: number;
+}> {
+  await new Promise((go) => setTimeout(go, 2000));
+  const years = PROJECTS.map((p) => p.year);
+  return {
+    total: PROJECTS.length,
+    newest: Math.max(...years),
+    oldest: Math.min(...years),
+  };
+}
