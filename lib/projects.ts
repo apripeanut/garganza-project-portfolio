@@ -1,9 +1,16 @@
 import "server-only";
+
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { projects } from "@/db/schema";
+
 export type Project = {
+  id?: string;
   slug: string;
   title: string;
   year: number;
-  summary: string;
+  summary: string | null;
+  imageUrl: string | null;
 };
 
 export type Stats = {
@@ -12,53 +19,27 @@ export type Stats = {
   oldest: number;
 };
 
-const PROJECTS: Project[] = [
-  {
-    slug: "vivid-stasis-character-wiki",
-    title: "Vivid Stasis Character WIKI",
-    year: 2025,
-    summary:
-      "A card gallery that contains all the characters from a rhythm game, Vivid//Stasis.",
-  },
-  {
-    slug: "notarhythmgame",
-    title: "NotaRhythmGame",
-    year: 2025,
-    summary: "A simple rhythm game that I have made as my Java project",
-  },
-  {
-    slug: "myfutureourfuture",
-    title: "MyFutureOurFuture",
-    year: 2025,
-    summary:
-      "A music that I have made as a school project to describe the life of Jose Rizal.",
-  },
-  {
-    slug: "lamontamenu",
-    title: "LamontaMenu",
-    year: 2024,
-    summary:
-      "An application for a restaurant. Lists down all orders, supplies, and statistics. However, it was left unfinished due to time constraints.",
-  },
-];
-
-export async function readProjects() {
-  return PROJECTS;
+export async function readProjects(): Promise<Project[]> {
+  return db.select().from(projects);
 }
 
-export async function readProject(slug: string) {
-  return PROJECTS.find((p) => p.slug === slug) ?? null;
+export async function readProject(slug: string): Promise<Project | null> {
+  const result = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.slug, slug))
+    .limit(1);
+
+  return result[0] ?? null;
 }
 
-export async function readStats(): Promise<{
-  total: number;
-  newest: number;
-  oldest: number;
-}> {
-  await new Promise((go) => setTimeout(go, 2000));
-  const years = PROJECTS.map((p) => p.year);
+export async function readStats(): Promise<Stats> {
+  const allProjects = await db.select().from(projects);
+
+  const years = allProjects.map((p) => p.year);
+
   return {
-    total: PROJECTS.length,
+    total: allProjects.length,
     newest: Math.max(...years),
     oldest: Math.min(...years),
   };
